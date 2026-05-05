@@ -97,25 +97,26 @@ export function updateCartItem(req, res) {
         0,
     );
 }
-export function removeCartItem(req, res){
+export function removeCartItem(req, res) {
     const userId = req.headers["x-user-id"];
     const productId = req.params.id;
-
-    const userCart = cartItems.find(item => item.user_id === userId);
-    if(!userCart){
-        return res.status(404).json({ message: "Cart not found" });
+    const userCart = cartItems.find((item) => item.user_id === userId);
+    if (!userCart) {
+        return res.status(404).json({ message: "Cart Not Found!!!" });
     }
-
-    const productIndex = userCart.products.findIndex(p => p.id === productId)
-    if(!productIndex){
-        return res.status(404).json({ message: "Product not found in cart" });
+    const cartProduct = userCart.products.find((p) => p.id === productId);
+    if (!cartProduct) {
+        return res
+            .status(404)
+            .json({ message: "Product Not Found in cart!!!" });
     }
-
-    userCart.products.splice(productIndex, 1)
+    userCart.products = userCart.products.filter((p) => p.id !== productId);
     userCart.quantity = userCart.products.reduce(
         (sum, item) => sum + item.quantity,
-        0
+        0,
     );
-
-    return res.status(200).json({ message: "Product removed from cart" });
+    return res.status(200).json({
+        message: "Product removed successfully",
+        cart: userCart,
+    });
 }
