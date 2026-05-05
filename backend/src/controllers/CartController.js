@@ -4,14 +4,31 @@ import {uuidv4} from "uuid";
 export function viewCart(req, res) {
     const userId = req.headers('x-user-id');
     const userCart = cartItems.filter(item => item.user_id === userId);
-    const result = userCart.map((item) => {
-        const product = products.find(p=>p.id === item.product_id);
-        return {
-            ...item,
-            product,
+
+
+    if(!userCart) {
+        const newCart = {
+            id: uuidv4(),
+            user_id: userId,
+            products: [],
+            quantity: 0,
         }
-    })
-    return res.status(200).json(result);
+        return res.status(200).json(newCart);
+    }
+
+    const cartWithProducts = {
+        ...userCart,
+        products:userCart.products.map(item => {
+            const product = products.find((item) => item.id === item.id);
+            return {
+                name: product.name,
+                price: product.price,
+                imageUrl: product.imageUrl,
+                quantity: product.quantity,
+            }
+        })
+    }
+
 }
 export function addToCart(req, res) {
     const userId = req.headers('x-user-id');
@@ -41,8 +58,6 @@ export function addToCart(req, res) {
 
     product.stock -= quantity;
     return res.status(200).json({message: 'Product added successfully'});
-
-
 
 
 }
