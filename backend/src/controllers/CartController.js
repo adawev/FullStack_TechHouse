@@ -72,7 +72,7 @@ export function addToCart(req, res) {
 
 }
 export function updateCartItem(req, res) {
-    const userId = req.headers('x-user-id');
+    const userId = req.headers['x-user-id'];
     const productId = req.params.id;
     const {quantity} = req.body;
 
@@ -102,21 +102,16 @@ export function removeCartItem(req, res) {
     const productId = req.params.id;
     const userCart = cartItems.find((item) => item.user_id === userId);
     if (!userCart) {
-        return res.status(404).json({ message: "Cart Not Found!!!" });
+        return res.status(404).json({ message: "Cart Not Found!" });
     }
     const cartProduct = userCart.products.find((p) => p.id === productId);
     if (!cartProduct) {
-        return res
-            .status(404)
-            .json({ message: "Product Not Found in cart!!!" });
+        return res.status(404).json({ message: "Product Not Found in cart!" });
     }
     userCart.products = userCart.products.filter((p) => p.id !== productId);
     userCart.quantity = userCart.products.reduce(
         (sum, item) => sum + item.quantity,
         0,
     );
-    return res.status(200).json({
-        message: "Product removed successfully",
-        cart: userCart,
-    });
+    return res.status(200).json({message: "Product removed successfully",});
 }
