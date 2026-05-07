@@ -115,3 +115,17 @@ export function removeCartItem(req, res) {
     );
     return res.status(200).json({message: "Product removed successfully",});
 }
+
+export function clearCart(req, res) {
+    const userId = req.headers['x-user-id'];
+
+    const userCart = cartItems.find((item) => item.user_id === userId);
+    if (!userCart) {
+        return res.status(404).json({ message: "Cart Not Found!" });
+    }
+
+    userCart.products = []
+    userCart.quantity = 0;
+
+    return  res.status(200).json({message: 'Cart cleared successfully', cart: userCart});
+}
