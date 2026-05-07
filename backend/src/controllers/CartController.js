@@ -18,8 +18,8 @@ export function viewCart(req, res) {
 
     const cartWithProducts = {
         ...userCart,
-        products:userCart.products.map(item => {
-            const product = products.find((item) => item.id === item.id);
+        products:userCart.products.map(items => {
+            const product = products.find((item) => item.id === items.id);
             return {
                 name: product.name,
                 price: product.price,
